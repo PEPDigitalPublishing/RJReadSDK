@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
 
   s.platform     =  :ios, '7.0'
 
-  s.homepage     = 'https://gitlab.com/PEP_Public/RJReadSDK'
+  s.homepage     = 'https://github.com/PEPDigitalPublishing/RJReadSDK'
 
-  s.source       = { :git => 'https://gitlab.com/PEP_Public/RJReadSDK.git', :tag => s.version }
+  s.source       = { :git => 'https://github.com/PEPDigitalPublishing/RJReadSDK.git', :tag => s.version }
 
   s.vendored_frameworks = 'RJReadSDK.framework'
 
