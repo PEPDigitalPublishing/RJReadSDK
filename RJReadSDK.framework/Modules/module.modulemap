@@ -1,0 +1,6 @@
+framework module RJReadSDK {
+  umbrella header "RJReadSDK.h"
+
+  export *
+  module * { export * }
+}
