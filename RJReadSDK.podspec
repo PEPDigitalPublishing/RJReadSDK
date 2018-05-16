@@ -32,10 +32,10 @@ Pod::Spec.new do |s|
   s.dependency 'RegexKitLite-NoWarning'
   s.dependency 'SSZipArchive'
 
-  s.dependency 'YIQISpeechEngine', :git => 'https://gitee.com/guxiong/YIQISpeechEngine.git'
 
 #  此处为讯飞语音SDK，可以不从该地址下载，但是必须保证项目中存在iflyMSC.framework
 #  s.dependency 'PEPiFlyMSC', :git => 'https://github.com/PEPDigitalPublishing/PEPiFlyMSC.git'
+#  s.dependency 'YIQISpeechEngine', :git => 'https://gitee.com/guxiong/YIQISpeechEngine.git'
 
 
   s.requires_arc = true
