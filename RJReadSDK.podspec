@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name         = 'RJReadSDK'
 
-  s.version      = '1.2.0'
+  s.version      = '1.2.1'
 
   s.summary      = '人教点读SDK'
 
@@ -32,14 +32,25 @@ Pod::Spec.new do |s|
   s.dependency 'RegexKitLite-NoWarning'
   s.dependency 'SSZipArchive'
 
-# 以下分别为【讯飞语音SDK】和【一起作业语音SDK】，二者必须依赖其一，也可同时存在
-#  s.dependency 'iflyMSC/ifly', :git => 'https://gitlab.com/PEP_Public/iflyMSC.git'
-#  s.dependency 'YIQISpeechEngine', :git => 'https://gitee.com/guxiong/YIQISpeechEngine.git'
+  s.dependency 'YIQISpeechEngine', :git => 'https://gitee.com/guxiong/YIQISpeechEngine.git'
+
+#  此处为讯飞语音SDK，可以不从该地址下载，但是必须保证项目中存在iflyMSC.framework
+#  s.dependency 'PEPiFlyMSC', :git => 'https://github.com/PEPDigitalPublishing/PEPiFlyMSC.git'
 
 
   s.requires_arc = true
 
 end
+
+
+
+
+
+
+
+
+
+
 
 
 
