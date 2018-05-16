@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>DEBUG</key>
-	<string>http://rjddw.mypep.cn/</string>
+	<string>https://rjddw.mypep.cn/</string>
 	<key>RELEASE</key>
-	<string>http://rjddw.mypep.cn/</string>
+	<string>https://rjddw.mypep.cn/</string>
 	<key>REQUESTS</key>
 	<dict>
 		<key>booklist_new</key>

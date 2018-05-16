@@ -8,14 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "RJBookGradeModel.h"
-#import "NBModelBookPageItem.h"
+#import "NBModelClickRead.h"
 #import "NBModelDownload.h"
 #import "PEPHTTPRequestOperation.h"
-
-typedef void(^RequestFinished)(PEPHTTPRequestOperation *operation, NSArray<RJBookGradeModel *> *bookList);
-
-typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArray<RJBookGrade *> *bookList);
-
+#import "RJWordInfoManager.h"
 
 @interface RJBookManager : NSObject
 
@@ -23,147 +19,116 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
 
 /**
  SDK认证
-
+ 
  @param appKey 对接时分配的appKey，用于区别不同平台
  */
 + (void)setAppKey:(NSString *)appKey;
 
-/**
- 第三方平台用户登录成功之后请调用该接口，在人教点读用户平台创建用户副本
 
- @param userID 第三方用户ID
+
+/**
+ 设置评测引擎类型：默认在线讯飞
+
+ @param type 详见 FOLLOW_ENGINE_TYPE 枚举
  */
-+ (void)loginAndSyncUserWithUserId:(NSString *)userID finished:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
++ (void)setEvaluateEngineType:(FOLLOW_ENGINE_TYPE)type;
+
 
 /**
- 第三方平台用户退出之后请调用该接口
- */
-+ (void)logout;
-
-/**
- 是否是登录状态
-
- @return 如果返回false，对接平台可调用login和getAuthenticatedBookList方法，以便SDK鉴权功能可正常使用。
- */
-+ (BOOL)isLogin;
-
-/**
- 获取当前用户绑定设备列表：每个用户最多绑定6台设备。该接口需要的userID等参数已在内部处理，第三方平台请确保用户已经登录并调用过loginAndSyncUserWithUserId方法之后再调用该方法，否则将无法得到正确内容
- 返回值示例：
- {
- "devlist":[
- {
- "dev_id":"0102",                           // 设备ID: iOS平台为UDID
- "create_time":"2017-08-09 18:01:38",       // 绑定该设备的时间
- "dev_name":"xiaomi2"                       // 设备名称
- },
- {
- "dev_id":"0106",
- "create_time":"2017-08-09 18:24:36",
- "dev_name":"xiaomi6"
- }
- ],
- "crrudevid":"0106",                        // 当前设备ID
- "errcode":0,                               // 状态码：0为成功
- "errmsg":"success"
- }
+ 设置讯飞SDK的AppID。如果不设置或者传空，SDK内部将会设置默认的AppID
+ 注意：目前版本的讯飞SDK不支持一个App中使用两个不同的AppID，而且AppID跟讯飞SDK的静态库文件绑定，不同的AppID无法正常初始化讯飞SDK。
+ 如果对接平台的App中已经使用了讯飞SDK，请务必在此处传入讯飞给你们分配的AppID，并且将Pods中的iflyMSC.framework替换为你们从讯飞开放平台下载的iflyMSC.framework，以保证不会跟人教点读SDK中依赖的讯飞SDK产生冲突
  
- @param finishedBolck 网络请求结束后回调的block
+ @param appID AppID
  */
-+ (void)getDeviceListFromCurrentUserDidLogin:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
++ (void)setiFlyMSCAppID:(NSString *)appID;
 
 
 /**
- 解绑设备
-
- @param deviceIDList 需要解绑的设备ID数组
- @param finishedBolck 网络请求结束后回调的block
- 解绑成功返回值示例：
- {"errcode":0," errmsg":"success"}
-
+ 第三方用户鉴权、绑定设备.
+ 对接平台可在APP启动或用户订单状态发生变化时调用该方法
+ 
+ @param userID 第三方用户ID
+ @param finishedBolck 网络请求结束后回调的block（包括当前用户购买过的书本和绑定的设备列表）
  */
-+ (void)removeDevicesWithDeviceIDList:(NSArray<NSString *> *)deviceIDList finished:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
++ (void)userAuthWithUserID:(NSString *)userID finished:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
+
+
+/**
+ 解绑设备。
+ 一个用户只能在最多6台设备上登录，如果超过这个上限，可在其他已绑定的设备上调用该方法解绑指定的设备
+ 
+ @param userID 用户ID
+ @param deviceIDs 设备ID数组
+ @param finishedBolck 网络请求结束后回调的block（errno == 110 为解绑成功）
+ */
++ (void)unbindDeviceWithUserID:(NSString *)userID
+                     deviceIDs:(NSArray<NSString *> *)deviceIDs
+                      finished:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
 
 
 #pragma mark - Reader
-/**
- 获取教材列表，方法内部已将json数据解析并转化为model
-
- @param finishBlock 网络请求结束后回调的block
- */
-+ (void)getBookList:(RequestFinished)finishBlock;
-
 
 /**
- *（新接口）获取教材列表，方法内部已将json数据解析并转化为model
-
- @param finishBlock 网络请求结束后回调的block
+ 请求书本列表
+ 
+ @param finishedBolck 网络请求结束后回调的block
  */
-+ (void)getBookListGroupByGrade:(RequestBookListFinished)finishBlock;
++ (void)getBookList:(void(^)(PEPHTTPRequestOperation *operation, NSArray<RJBookGrade *> *bookList))finishedBolck;
 
 
 /**
  通过bookID获取book对象
-
+ 
  @param bookID 教材ID
  @param finishedBlock 网络请求结束后回调的block
  */
 + (void)getBookItemWithBookID:(NSString *)bookID finished:(void(^)(RJBookItemModel *bookItem))finishedBlock;
 
+
 /**
  获取指定教材目录结构
-
+ 
  @param bookitem 教材模型实例
  @param finishBlock 网络请求结束后回调的block
  */
-+ (void)getBookCatalogWith:(RJBookItemModel *)bookitem finished:(void(^)(NSArray<NBModelBookPageItem *> *catalog))finishBlock;
++ (void)getBookCatalogWith:(RJBookItemModel *)bookitem finished:(void(^)(NBModelClickRead *catalog))finishBlock;
 
-/**
- 获取当前用户订购的教材，方法内部已将json数据解析并转化为model。
- 该方法需要调用loginAndSyncUserWithUserId方法并登录成功之后调用才会返回正确数据
-
- @param finishBlock 网络请求结束后回调的block
- */
-+ (void)getMyOrderBooks:(RequestFinished)finishBlock;
-
-/**
- 获取当前用户已购买并授权的教材列表
- 第三方平台可在【购买教材成功之后】、【退款成功之后】和【获取当前用户购买教材之后】等调用该接口，以便SDK完成教材鉴权
-
- @param result result description
- */
-+ (void)getAuthenticatedBookList:(void(^)(id description))result;
 
 /**
  根据传入的bookID获取该教材的购买状态
-
+ 
  @param bookID bookID
  */
 + (RJBOOkAUTH)checkAuthStateWithBookID:(NSString *)bookID;
 
-/**
- 打开点读页面: 该方法没有跳转页码参数，如果教材认证通过（已购买），阅读器会自动记录阅读进度
 
+/**
+ 打开点读页面: 如果教材认证通过（已购买），阅读器会自动记录阅读进度
+ 
  @param bookitem bookitem
  @param experience 是否是体验模式：默认为YES
  @return 教材认证状态
  */
 + (RJBOOkAUTH)openBook:(RJBookItemModel *)bookitem isExperience:(BOOL)experience;
 
+
 /**
- 打开点读页面
+ 打开点读页面: 如果教材认证通过（已购买），阅读器会自动记录阅读进度
  
  @param bookitem bookitem
  @param experience 是否是体验模式：默认为YES
- @param page 跳转页码。从0开始的页码，并非教材页码
+ @param page 跳转页码。从0开始的下标，并非教材页码
  @return 教材认证状态
  */
 + (RJBOOkAUTH)openBook:(RJBookItemModel *)bookitem isExperience:(BOOL)experience pageNumber:(NSUInteger)page;
+
 
 /**
  关闭阅读器：可在用户点击【立即购买】按钮的回调里调用该方法，先关闭阅读器，然后进入购买页面
  */
 + (void)closeReader;
+
 
 /**
  *  书本状态回调，状态详见BOOK_STATE枚举
@@ -176,7 +141,7 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
 
 /**
  设置书本状态
-
+ 
  @param bookid 书本ID
  @param state 状态类型
  @param params 参数
@@ -186,17 +151,18 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
 
 /**
  点读页面关闭回调
-
- @param closedBlock 对应的bookid和页面打开时间(playtime)、持续时间(duration)、句子的点击次数及播放时长等统计信息([info[@"wordInfoCount"], 数据类型为：NSArray<RJWordInfoModel *>)
+ 
+ @param closedBlock wordInfoManager中包含本次阅读的bookID、书本打开时间、关闭时间、阅读进度、点读记录、评测记录等信息，具体详见RJWordInfoManager类。
+ wordInfoManager中只包含本次打开的书本的信息，其中的统计数据会在下次打开书时清除，调用者请自行保存
  */
-+ (void)bookClosed:(void(^)(NSDictionary *info))closedBlock;
++ (void)bookClosed:(void(^)(RJWordInfoManager *wordInfoManager))closedBlock;
 
 
 /**
- *  更新书本体验模式。如需在阅读器打开的过程中更改体验模式，则可调用此方法修改。
+ *  更新书本状态。如需在阅读器打开的过程中更改书本状态（如已购买），则可调用此方法修改。
  *
  *  @param bookid     bookid description
- *  @param experience 是否是体验模式
+ *  @param experience 是否是体验模式，YES为体验模式
  */
 + (void)updateBookState:(NSString*)bookid experience:(BOOL)experience;
 
@@ -210,16 +176,18 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
  */
 + (NSArray<NSString *> *)getlocalBooklist;
 
+
 /**
  下载教材
-
+ 
  @param itemModel itemModel description
  */
 + (void)downloadItem:(RJBookItemModel *)itemModel;
 
+
 /**
  通过bookid从下载队列中获取下载实例
-
+ 
  @param bookid bookid description
  @return 该bookID对应教材的下载实例
  */
@@ -228,10 +196,11 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
 
 /**
  暂停或继续下载
-
+ 
  @param task 下载请求实例
  */
 + (void)pauseOrContinueDownloadWithTask:(NBModelDownload *)task;
+
 
 /**
  *  根据bookid获取当前下载任务书的状态
@@ -250,10 +219,12 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
  */
 + (void)removeTask:(RJBookItemModel *)itemModel;
 
+
 /**
  *  取消所有下载任务
  */
 + (void)cancelAllTask;
+
 
 /**
  *  删除某本书
@@ -263,10 +234,12 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
  */
 + (void)deleteBook:(RJBookItemModel *)itemModel;
 
+
 /**
  删除所有下载教材（包括下载中的）
  */
 + (void)deleteAllLocalBooks;
+
 
 /**
  *  是否有下载在执行
@@ -278,13 +251,16 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
 
 
 
+
 #pragma mark - Caches Manager
+
 /**
  *  计算可清除的缓存大小
  *
  *  @return size(byte)
  */
 + (NSInteger)cachesize;
+
 
 /**
  *  计算所有已下载书本的大小
@@ -293,16 +269,26 @@ typedef void(^RequestBookListFinished)(PEPHTTPRequestOperation *operation, NSArr
  */
 + (NSInteger)docsize;
 
+
 /**
  清除缓存：清除在线阅读产生的缓存文件
-
+ 
  @return 是否清除成功
  */
 + (BOOL)clearCache;
 
+
+/**
+ 清除某本书的缓存
+ 
+ @param bookID 书本ID
+ @return 是否清除成功
+ */
++ (BOOL)clearOnlineBookCacheWithBookID:(NSString *)bookID;
+
+
+
 @end
-
-
 
 
 

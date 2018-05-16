@@ -31,6 +31,7 @@ FOUNDATION_EXPORT const unsigned char RJReadSDKVersionString[];
 #import "NBModelDownload.h"
 #import "NBModelBookAudio.h"
 #import "PEPHTTPRequestOperation.h"
+#import "NBFollowTrackResult.h"
 
 
 #endif

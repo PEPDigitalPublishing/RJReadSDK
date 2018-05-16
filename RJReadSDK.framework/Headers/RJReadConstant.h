@@ -39,10 +39,8 @@ typedef enum {
 
 
 typedef enum {
-    FOLLOW_ENGINE_TYPE_OFFLINE_CS, //离线驰声
-    FOLLOW_ENGINE_TYPE_ONLINE_XF,  //在线讯飞
-    FOLLOW_ENGINE_TYPE_ONLINE_CS,  //在线驰声
-    //    FOLLOW_ENGINE_TYPE_ONLINE_YZS, //云知声在线
+    FOLLOW_ENGINE_TYPE_ONLINE_XF,  // 在线讯飞
+    FOLLOW_ENGINE_TYPE_YIQIZUOYE,  // 一起作业
 }FOLLOW_ENGINE_TYPE;
 
 
@@ -51,8 +49,6 @@ typedef NS_ENUM(NSUInteger, RJBOOkAUTH) {
     RJBOOkAUTH_PASS,                        // 验证通过
     RJBOOkAUTH_EXPIRED,                     // 授权过期
 };
-
-
 
 
 
