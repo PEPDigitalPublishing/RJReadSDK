@@ -4,11 +4,11 @@ Pod::Spec.new do |s|
 
   s.name         = 'RJReadSDK'
 
-  s.version      = '1.2.3'
+  s.version      = '1.2.4'
 
   s.summary      = '人教点读SDK'
 
-  s.author       = { 'RJReadSDK' => 'PEP' }
+  s.author       = { 'PEP' => 'lipz@pep.com.cn' }
 
   s.platform     =  :ios, '8.0'
 
@@ -36,6 +36,8 @@ Pod::Spec.new do |s|
 
 #  此处为讯飞语音SDK，可以不从该地址下载，但是必须保证项目中存在iflyMSC.framework
 #  s.dependency 'PEPiFlyMSC', :git => 'https://github.com/PEPDigitalPublishing/PEPiFlyMSC.git'
+
+#  此处为一起作业语音SDK，仅提供给一起作业使用，其他对接方请勿使用此SDK
 #  s.dependency 'YIQISpeechEngine', :git => 'https://gitee.com/guxiong/YIQISpeechEngine.git'
 
 
