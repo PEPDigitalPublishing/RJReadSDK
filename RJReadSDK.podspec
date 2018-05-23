@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name         = 'RJReadSDK'
 
-  s.version      = '1.2.4'
+  s.version      = '1.2.5'
 
   s.summary      = '人教点读SDK'
 
