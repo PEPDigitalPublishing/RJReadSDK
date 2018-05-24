@@ -4,13 +4,13 @@ Pod::Spec.new do |s|
 
   s.name         = 'RJReadSDK'
 
-  s.version      = '1.2.5'
+  s.version      = '1.2.6'
 
   s.summary      = '人教点读SDK'
 
   s.author       = { 'PEP' => 'lipz@pep.com.cn' }
 
-  s.platform     =  :ios, '8.0'
+  s.platform     =  :ios, '7.0'
 
   s.homepage     = 'https://github.com/PEPDigitalPublishing/RJReadSDK'
 
