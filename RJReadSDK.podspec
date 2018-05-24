@@ -22,7 +22,6 @@ Pod::Spec.new do |s|
 
   s.frameworks   = 'AVFoundation', 'Security', 'CoreMotion', 'QuartzCore'
 
-  s.dependency 'LEColorPicker'
   s.dependency 'MRCircularProgressView'
   s.dependency 'MJExtension'
   s.dependency 'MJRefresh'
