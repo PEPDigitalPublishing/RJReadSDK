@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'
   s.dependency 'RegexKitLite-NoWarning'
-  s.dependency 'SSZipArchive'
+#  s.dependency 'SSZipArchive'
 
 #  s.dependency 'PEPBigData', :git => 'https://github.com/PEPDigitalPublishing/PEPBigData.git'
 
