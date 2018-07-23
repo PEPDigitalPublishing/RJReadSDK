@@ -54,7 +54,8 @@
  */
 - (void)setWordInfoWithWordID:(NSString *)wordID
                   wordContent:(NSString *)wordContent
-                     duration:(NSTimeInterval)duration;
+                     duration:(NSTimeInterval)duration
+                    pageIndex:(NSInteger)pageIndex;
 
 
 /**
@@ -92,6 +93,9 @@
 /** 单元名 */
 @property (nonatomic, copy) NSString *unit;
 
+/** 句子所在的页码 */
+@property (nonatomic, assign) NSInteger pageIndex;
+
 /** 每次播放时长列表 */
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *durations;
 
@@ -103,14 +107,16 @@
                    wordContent:(NSString *)wordContent
                          count:(NSUInteger)count
                       duration:(NSTimeInterval)duration
-                          unit:(NSString *)unit;
+                          unit:(NSString *)unit
+                     pageIndex:(NSInteger)pageIndex;
 
 
 + (instancetype)wordWithID:(NSString *)wordID
                wordContent:(NSString *)wordContent
                      count:(NSUInteger)count
                   duration:(NSTimeInterval)duration
-                      unit:(NSString *)unit;
+                      unit:(NSString *)unit
+                 pageIndex:(NSInteger)pageIndex;
 
 
 @end
