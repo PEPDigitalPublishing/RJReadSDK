@@ -15,6 +15,6 @@
 
 @property(nonatomic,strong) NSString *page_url;
 
-@property(nonatomic,strong) NSMutableArray *track_info;
+@property(nonatomic,strong) NSMutableArray<NBModelTrackInfo *> *track_info;
 
 @end

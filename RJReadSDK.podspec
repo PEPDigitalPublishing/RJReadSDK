@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name         = 'RJReadSDK'
 
-  s.version      = '1.3.0'
+  s.version      = '1.3.1'
 
   s.summary      = '人教点读SDK'
 
@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
   s.dependency 'AFNetworking'
   s.dependency 'Masonry'
   s.dependency 'SDWebImage'
-  s.dependency 'RegexKitLite-NoWarning'
 #  s.dependency 'SSZipArchive'
 
 #  s.dependency 'PEPBigData', :git => 'https://github.com/PEPDigitalPublishing/PEPBigData.git'
