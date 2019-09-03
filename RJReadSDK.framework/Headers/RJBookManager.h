@@ -67,6 +67,10 @@
                       finished:(void(^)(PEPHTTPRequestOperation *operation, id data))finishedBolck;
 
 
+
+/** 获取当前设备的UUID */
++ (NSString *)getCurrentDeviceUUID;
+
 #pragma mark - Reader
 
 /**
